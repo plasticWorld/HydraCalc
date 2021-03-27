@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="shortcut icon" href="#">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="shortcut icon" type="image/png" href="../src/favicon.png" />
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css"
+    rel="stylesheet">
+  <script
+    src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.1/css/all.css"
+    integrity="sha384-xxzQGERXS00kBmZW/6qxqJPyxW3UR0BPsL4c8ILaIWXva5kFi7TxkIIaMiKtqV1Q" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/logo.css">
+
+  <script type="text/x-template" id="res-template">
+    <table class="centered table table-hover">
+      <thead>       
+        <th>Тип резины</th>
+        <th>Погашаемая энергия</th>
+        <th>Ширина</th>
+        <th>Длина</th>       
+      </thead>
+      <tbody class="text-center">
+        <tr v-for="entry in values">
+          <td> {{entry.rubber}} </td>
+          <td> {{entry.energy}} </td>
+          <td> {{entry.width }} </td>
+          <td> {{entry.length}} </td>
+        </tr>
+      </tbody>
+    </table>
+  </script>
+
+  <title>Расчеты ПМПБ</title>
+
+</head>
+
+<body>
+
+  <div id="mySidenav" class="sidenav">
+    <span id="closeicon" onclick="closeNav()">
+      <i class="fas fa-times fa-2x"></i>
+    </span>
+    <hr>
+    <a href="#">Расчет нагрузки от навала судна при подходе к сооружению</a>
+    <hr>
+    <a href="#">Расчет нагрузки от навала судна пришвартованного судна на сооружение</a>
+    <hr>
+    <a href="#">Расчет нагрузки от натяжения швартовов</a>
+    <hr>
+    <a href="#">Определение отметки дна перед сооружением</a>
+    <hr>
+    <a href="#">Подбор деталей больверка</a>
+    <hr>
+    <a href="#">Определение массы камня для крепления откоса берегового укрепления</a>
+    <hr>
+    <a href="#">Руководство пользователя</a>
+
+  </div>
+
+
+  <div id="openicon" class="align-middle text-center">
+    <i onclick="openNav()" class="fas fa-water fa-5x"></i>
+    <!-- <span id="logo">ПМПБ</span> -->
+    <span class="halfStyle" data-content="П">П</span>
+    <span class="halfStyle" data-content="М">М</span>
+    <span class="halfStylee">П</span>
+    <span class="halfStylee">Б</span>
+  </div>
+  <div class="align-middle text-center">
+    <h1>Расчет нагрузки от навала судна при подходе к сооружению</h1>
+
+    <pre class="text-muted">Расчет производится в соответствии с нормативными документами
+(СП 38.13330.2018, СП 350.1326000.2018, СП 444.1326000.2019)</pre>
+  </div>
+
+
+
+
+
+  <div id="forminput">
+    <div class="pt-2 sticky-top  text-right col-auto" v-show="!showTable" id="picture">
+      <button id="designScheme" type="button" class="btn btn-outline-success pb-2 " data-toggle="tooltip"
+        title="Расчетная схема" @click="showScheme = !showScheme">
+        <i class="fas fa-pencil-ruler fa-2x"></i>
+      </button>
+      <div class="modal modal-content align-middle text-center" v-show="showScheme">
+        <h5>Расчетная схема</h5>
+        <p><img class="img-fluid" src="../src/scheme.png" alt=" Расчетная схема"></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <form action="#" v-show="!showTable">
+        <div class="form-group pt-4">
+          <label for="vesselVolume">Водоизмещение в грузу расчетного судна, W</label>
+          <input type="number" class="form-control" id="vesselVolume" aria-describedby="emailHelp" min="1" max="5000000"
+            placeholder="0">
+          <small id="inputHelp" class="form-text text-muted">Вводите значение в тоннах</small>
+        </div>
+
+        <div>
+          <input id="gateEntrance" type="checkbox" data-toggle="switchbutton" data-onlabel="Да" data-offlabel="Нет"
+            data-onstyle="info" data-offstyle="light" v-model="toggleEntrance"
+            v-on:change="showIfGateEntrance = !showIfGateEntrance">
+          Ввод судна в шлюз
+        </div>
+        <br>
+        <div class="form-group" v-show="showIfGateEntrance">
+          <label for="vesselVolume">Скорость подхода судна, v<sub>b</sub></label>
+          <input type="number" class="form-control" id="vesselVelocity" aria-describedby="emailHelp" min="0.01" max="2"
+            step="0.01" placeholder="0">
+          <small id="inputHelp" class="form-text text-muted">Вводите значение в метрах в секунду</small>
+        </div>
+
+        <div class="choosing" v-show="!showIfGateEntrance">
+          <div>
+            <input class="form-check" id="waterAreaClose" type="checkbox" data-toggle="switchbutton"
+              data-onlabel="Закрытый" data-offlabel="Открытый" data-onstyle="info" data-offstyle="light"
+              v-model="toggle" true-value="true" false-value="false" v-on:change="showIfClose = !showIfClose">
+            Тип акватории
+          </div>
+
+          <div class="pt-3" id="mooring">
+            Условия швартовки
+            <div class="form-check">
+              <input class="form-check-input" type="radio" checked name="mooringType" id="mooringEasy">
+              <label class="form-check-label" for="mooringEasy">
+                Простые условия
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="mooringType" id="mooringAverage">
+              <label class="form-check-label" for="mooringAverage">
+                Средние условия
+              </label>
+            </div>
+            <div class="form-check" v-if="!showIfClose">
+              <input class="form-check-input" type="radio" name="mooringType" id="mooringDifficult">
+              <label class="form-check-label" for="mooringDifficult">
+                Сложные условия
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div id="pierApproaching">
+          <div class="form-group pt-3" id="approach">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="approach" id="sideApproach"
+                v-on:input="approach = 'side'" v-on:change="onApproachChange">
+              <label class="form-check-label" for="sideApproach">
+                Подход судна бортом (лагом)
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="approach" id="sternApproach"
+                v-on:input="approach = 'stern'" v-on:change="onApproachChange">
+              <label class="form-check-label" for="sternApproach">
+                Подход судна кормой (носом)
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" v-if="showIfSide">
+            <label for="waterDepth">Глубина воды</label>
+            <input type="number" class="form-control" id="waterDepth" min="0.1" max="100" step="0.05" placeholder="0">
+            <small id="inputHelp" class="form-text text-muted">Вводите значение в метрах</small>
+          </div>
+        </div>
+
+        <div class="pb-3">
+          <input id="towing" type="checkbox" data-toggle="switchbutton" data-onlabel="Да" data-offlabel="Нет"
+            data-onstyle="info" data-offstyle="light" v-model="toggleTowing"
+            v-on:change="showMooringAngle = !showMooringAngle">
+          Буксировка
+        </div>
+
+        <div class="form-group" v-show="showA = (showIfGateEntrance ||  !showMooringAngle) ? true : false">
+          <label for="mooringAngle">Угол подхода к причалу &alpha;</label>
+          <input type="number" class="form-control" id="mooringAngle" min="1" max="90" step="1" placeholder="0">
+          <small id="inputHelp" class="form-text text-muted">Вводите значение в градусах</small>
+        </div>
+
+        <div class="form-group">
+          <input type="checkbox" data-toggle="switchbutton" data-onlabel="Да" data-offlabel="Нет" data-onstyle="info"
+            data-offstyle="light" name="berthStructure" id="solidStructure">
+          <label class="form-check-label" for="solidStructure">
+            Сплошная конструкция причала
+          </label>
+        </div>
+
+        <div class="form-group">
+          <div class="pb-2">
+            <input id="safetyToggle" type="checkbox" data-toggle="switchbutton" data-onlabel="Есть" data-offlabel="Нет"
+              data-onstyle="info" data-offstyle="light" true-value="true" false-value="false"
+              v-on:change="showSafety = !showSafety">
+            Система контроля за перемещениями судна и его скоростью
+          </div>
+          <div class="form-group" v-show="!showSafety">
+            <label for="vesselType">Тип судна (выберите один):</label>
+            <select class="form-control" id="vesselType" name="vesselTypeList">
+              <option value="cargo">Танкеры, сухогрузы, грузовые суда</option>
+              <option value="container">Контейнеровозы</option>
+              <option value="rolker">Суда с горизонтальным способом погрузки, паромы</option>
+              <option value="worker">Буксиры, рабочие суда</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div>
+            <input id="aproximateToggle" type="checkbox" data-toggle="switchbutton" data-onlabel="Да"
+              data-offlabel="Нет" data-onstyle="info" data-offstyle="light" v-model="toggleEasy" true-value="true"
+              false-value="false" v-on:change="showIfAproximate = !showIfAproximate">
+            Расчет в первом приближении
+          </div>
+          <br>
+          <div class="form-check pb-3" v-if="showIfAproximate">
+            <div>
+              <input class="form-check-input" type="radio" name="mooring" id="quarterMooring" value="quarter"
+                v-model="showMult">
+              <label class="form-check-label" for="quarterMooring">
+                Швартовка на четверть длины
+              </label>
+            </div>
+            <div>
+              <input class="form-check-input" type="radio" name="mooring" id="thirdMooring" value="third"
+                v-model="showMult">
+              <label class="form-check-label" for="thirdMooring">
+                Швартовка на треть длины
+              </label>
+            </div>
+            <div>
+              <input class="form-check-input" class="custom-control-input" type="radio" name="mooring" id="halfMooring"
+                value="half" v-model="showMult">
+              <label class="form-check-label" for="halfMooring">
+                Швартовка средней точке
+              </label>
+            </div>
+          </div>
+          <div v-if="!showIfAproximate">
+            <div>
+              <div class="form-group">
+                <label for="velocityAngle">Угол между направлением двействия скорости V и линией R, &phi;</label>
+                <input type="number" class="form-control" id="velocityAngle"
+                  v-on:input="velocityAngle=$event.target.value" min="1" max="90" step="1" placeholder="0">
+                <small id="inputHelp" class="form-text text-muted">Вводите значение в градусах</small>
+              </div>
+
+              <div v-show="velocityAngle >= 10 ? true : false">
+                <div class="form-group">
+                  <label for="vesselLength">Длина судна</label>
+                  <input type="number" class="form-control" id="vesselLength" min="1" max="300" step="0.05"
+                    placeholder="0">
+                  <small id="inputHelp" class="form-text text-muted">Вводите значение в метрах</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="vesselWidth">Ширина судна</label>
+                  <input type="number" class="form-control" id="vesselWidth" min="1" max="100" step="0.05"
+                    placeholder="0">
+                  <small id="inputHelp" class="form-text text-muted">Вводите значение в метрах</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="vesselWidth">Расстояние по продольной оси судна от его центра тяжести до точки
+                    максимальной кривизны борта в плане, у</label>
+                  <input type="number" class="form-control" id="centerOfMassDistance" min="1" max="500" step="0.5"
+                    placeholder="0">
+                  <small id="inputHelp" class="form-text text-muted">Вводите значение в метрах</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="vesselWidth">Плотность воды</label>
+                  <input type="number" class="form-control" id="waterDensity" min="0.8" max="2" step="0.005"
+                    placeholder="0">
+                  <small id="inputHelp" class="form-text text-muted">Вводите значение в тоннах на метр в кубе
+                    (стандартное значение 1,025 т/м<sup>3</sup>)</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="showDraught = (showIfSide || (!showIfAproximate && velocityAngle >= 10)) ? true : false">
+            <div class="form-group pt-1">
+              <label for="vesselDraught">Осадка судна</label>
+              <input type="number" class="form-control" id="vesselDraught" min="0.1" max="50" step="0.1"
+                placeholder="0">
+              <small id="inputHelp" class="form-text text-muted">Вводите значение в метрах</small>
+            </div>
+          </div>
+        </div>
+        <div class="pb-4">
+          <input id="materialsHardnessToggle" type="checkbox" data-toggle="switchbutton" data-onlabel="Да"
+            data-offlabel="Нет" data-onstyle="info" data-offstyle="light" true-value="true" false-value="false">
+          Применяются отбойники из резины толщиной > 150 мм
+        </div>
+
+        <button type="button" id="calc" class="btn btn-outline-success pb-2" @click.left="showTable = true"
+          @click="cStart()">
+          <i class="fa fa-calculator" aria-hidden="true"></i> Рассчитать
+        </button>
+      </form>
+
+      <br>
+
+      <div id="resAll" v-show="showTable && !showList">
+        <div>
+          <a type="button" class="noprint btn btn-outline-secondary" href='index2.html'>
+            <i class="fas fa-angle-double-left"></i> Назад</a>
+          <a type="button" id="show" class="btn btn-outline-info" @click.left="showList = true">
+            <!-- onclick="showStart()" -->
+            <i class="far fa-list-alt"></i> Подобрать
+          </a>
+          <a type="button" class="noprint btn btn-outline-warning" href='javascript:window.print(); void 0;'>
+            <i class="fas fa-print"></i> Распечатать</a>
+        </div>
+        <br>
+        <table class="centered table table-bordered table-sm bt-2">
+          <thead class="thead-light">
+            <tr class="text-center">
+              <th>Параметр</th>
+              <th>Обознач.</th>
+              <th>Ед.изм.</th>
+              <th>Значение</th>
+            </tr>
+          </thead>
+          <tbody class="text-center">
+            <tr>
+              <td class="text-left">Водоизмещение судна</td>
+              <td>W</td>
+              <td>тыс.т</td>
+              <td><span id="vv"></span></td>
+            </tr>
+            <tr>
+              <td class="text-left">Угол подхода к причалу</td>
+              <td>&alpha;</td>
+              <td>град.</td>
+              <td><span id="ma"></span></td>
+            </tr>
+            <tr>
+              <td class="text-left">Нормальная скорость подхода</td>
+              <td>v<sub>b</sub></td>
+              <td>м/c</td>
+              <td><span id="vn"></span></td>
+            </tr>
+
+            <tr>
+              <td class="text-left">Коэффициент присоединенной массы</td>
+              <td>c<sub>m</sub></td>
+              <td>-</td>
+              <td><span id="am"></span></td>
+            </tr>
+            <tr>
+              <td class="text-left">Коэффициент сквозности причала</td>
+              <td>c<sub>с</sub></td>
+              <td>-</td>
+              <td><span id="th"></span></td>
+            </tr>
+            <tr>
+              <td class="text-left">Коэффициент жесткости отбойных устройств</td>
+              <td>c<sub>s</sub></td>
+              <td>-</td>
+              <td><span id="cs"></span></td>
+            </tr>
+
+
+
+            <tr v-if="showIfAproximate && showMult !=='half'" class="text-center">
+              <td rowspan="2" class="text-left align-middle">Коэффициент эксцентриситета</td>
+              <td rowspan="2">c<sub>e</sub></td>
+              <td rowspan="2">-</td>
+              <td><span id="ecc-min"></span></td>
+            </tr>
+            <tr v-if="showIfAproximate && showMult !=='half'" class="text-center">
+              <td><span id="ecc-max"></span></td>
+            </tr>
+
+            <tr v-if="!showIfAproximate || showMult=='half'">
+              <td class="text-left">Коэффициент эксцентриситета</td>
+              <td>c<sub>e</sub></td>
+              <td>-</td>
+              <td><span id="ecc"></span></td>
+            </tr>
+
+            <tr v-if="showIfAproximate && showMult !=='half'" class="text-center">
+              <td rowspan="2" class="text-left align-middle">Коэффициент учитывающий условия швартовки и конструкцию
+                причальных
+                сооружений</td>
+              <td rowspan="2">&psi;</td>
+              <td rowspan="2">-</td>
+              <td><span id="gb-min"></span></td>
+            </tr>
+            <tr v-if="showIfAproximate && showMult !=='half'" class="text-center">
+              <td><span id="gb-max"></span></td>
+            </tr>
+
+            <tr v-if="!showIfAproximate || showMult=='half'">
+              <td class="text-left">Коэффициент учитывающий условия швартовки и конструкцию причальных сооружений</td>
+              <td>&psi;</td>
+              <td>-</td>
+              <td><span id="gb"></span></td>
+            </tr>
+
+            <tr>
+              <td class="text-left">Коэффициент безопасности</td>
+              <td>&gamma;<sub>s</sub></td>
+              <td>-</td>
+              <td><span id="sf"></span></td>
+            </tr>
+
+            <tr v-if="showIfAproximate && showMult !=='half'" class="table-success">
+              <td rowspan="2" class="text-left align-middle">Энергия, которую должно погасить отбойное устройство</td>
+              <td rowspan="2">Е<sub>a</sub></td>
+              <td rowspan="2">кДж</td>
+              <td><span id="resultEn-min"></td>
+            </tr>
+            <tr v-if="showIfAproximate && showMult !=='half'" class="table-success">
+              <td><span id="resultEn-max"></td>
+            </tr>
+
+            <tr v-if="!showIfAproximate || showMult=='half'" class="table-success">
+              <td class="text-left">Энергия, которую должно погасить отбойное устройство</td>
+              <td>Е<sub>a</sub></td>
+              <td>кДж</td>
+              <td><span id="resultEn"></span>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <div v-show="showList">
+        <a type="button" class="noprint btn btn-outline-secondary" @click.left="showTable = true, showList=false">
+          <i class="fas fa-angle-double-left"></i> Назад
+        </a>
+
+        <div class="container align-middle text-center">
+          <h4 class="text-dark pt-3 pb-2">Отбойные устройства типа LMD</h4>
+          <div>
+            <!-- вставляются строки сюда!!! -->
+            <row-grid :values="listT"> </row-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    Vue.component('row-grid', {
+      template: "#res-template",
+      props: {
+        values: Array
+      }
+    });
+
+    // form and it's logic
+    let forminput = new Vue({
+      el: '#forminput',
+      data() {
+        return {
+          listT: [1, 2, 3, 4],
+          showIfClose: true,
+          showIfSide: false,
+          showIfAproximate: true,
+          showIfGateEntrance: false,
+          showMooringAngle: false,
+          showSafety: false,
+          showA: false,
+          showDraught: false,
+          velocityAngle: '',
+          approach: '',
+          toggle: true,
+          toggleEasy: true,
+          toggleEntrance: false,
+          toggleTowing: false,
+          showMult: false,
+          showScheme: false,
+          showTable: false,
+          showList: false
+        }
+      },
+      methods: {
+        cStart: async function (event) {
+          let st = await import('../js/load_calc.js');
+          let sf = await import('../js/selectfender.js');
+          st.CalcStart();
+          this.listT = sf.fenderSelect();
+        },
+        onApproachChange() {
+          if (this.approach == 'side') {
+            this.showIfSide = true;
+          } else {
+            this.showIfSide = false;
+          }
+        },
+      },
+    });
+  </script>
+
+  <script>
+    /* Set the width of the side navigation*/
+    function openNav() {
+      document.getElementById("mySidenav").style.width = "400px";
+      document.getElementById("picture").style.visibility = "hidden";
+    }
+
+    /* Set the width of the side navigation to 0 */
+    function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+      document.getElementById("picture").style.visibility = "visible";
+    }
+  </script>
+  <script type="module" src="../js/load_calc.js"></script>
+</body>
+
+</html>
+
+<!-- <i class="fas fa-ship"></i>
+<i class="fas fa-wind"></i> -->
