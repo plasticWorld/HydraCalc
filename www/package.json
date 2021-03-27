@@ -1,0 +1,28 @@
+{
+  "name": "hydra-calc",
+  "version": "1.0.0",
+  "description": "This is kit of hydraulic engineering calculations.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "HydraCalc"
+  },
+  "keywords": [
+    "engineering",
+    "calculation",
+    "loads",
+    "pier",
+    "water",
+    "breakwaves",
+    "energy",
+    "fenders"
+  ],
+  "author": "Kate[Suok]Geyer",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  }
+}
