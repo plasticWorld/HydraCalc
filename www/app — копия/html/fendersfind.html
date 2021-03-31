@@ -25,24 +25,76 @@
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/logo.css">
 
-  <script type="text/x-template" id="res-template">
-    <table class="centered table table-hover">
-      <thead>       
-        <th>Тип резины</th>
-        <th>Погашаемая энергия</th>
-        <th>Ширина</th>
-        <th>Длина</th>       
-      </thead>
-      <tbody class="text-center">
-        <tr v-for="entry in values">
-          <td> {{entry.rubber}} </td>
-          <td> {{entry.energy}} </td>
-          <td> {{entry.width }} </td>
-          <td> {{entry.length}} </td>
-        </tr>
-      </tbody>
-    </table>
-  </script>
+
+  <style>
+    th {
+      cursor: pointer;
+      color: rgba(75, 75, 75, 0.781);
+      background-color: #dddddd;
+    }
+
+    th.active {
+      color: rgb(255, 255, 255);
+      background-color: rgb(52, 181, 255);
+    }
+
+    th.active .arrow {
+      opacity: 1;
+
+    }
+
+    .arrow {
+      display: inline-block;
+      vertical-align: middle;
+      width: 0;
+      height: 0;
+      margin-left: 5px;
+      opacity: 0.66;
+    }
+
+    .arrow.asc {
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-bottom: 4px solid #dddddd;
+    }
+
+    .arrow.dsc {
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 4px solid #dddddd;
+    }
+  </style>
+
+  <script type="text/x-template" id="grid-template">
+  <table class="table  table-hover">
+    <thead class="align-middle text-center">
+
+      <tr>
+        <th v-for="key in columns"
+          @click="sortBy(key)"
+          :class="{ active: sortKey == key }">
+          {{ key | russianalize }}
+          
+          <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+          </span>
+          
+        </th>
+      </tr>
+
+    </thead>
+
+    <tbody class="align-middle text-center">
+
+      <tr v-for="entry in filteredfenders">
+        <td v-for="key in columns">
+          {{entry[key]}}
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</script>
+
 
   <title>Расчеты ПМПБ</title>
 
@@ -83,8 +135,8 @@
   <div class="align-middle text-center">
     <h1>Расчет нагрузки от навала судна при подходе к сооружению</h1>
 
-    <pre class="text-muted">Расчет производится в соответствии с нормативными документами
-(СП 38.13330.2018, СП 350.1326000.2018, СП 444.1326000.2019)</pre>
+    <span class="text-muted">Расчет производится в соответствии с нормативными документами
+      (СП 38.13330.2018, СП 350.1326000.2018, СП 444.1326000.2019)</pre>
   </div>
 
 
@@ -453,8 +505,16 @@
         <div class="container align-middle text-center">
           <h4 class="text-dark pt-3 pb-2">Отбойные устройства типа LMD</h4>
           <div>
-            <!-- вставляются строки сюда!!! -->
-            <row-grid :values="listT"> </row-grid>
+
+            <div class="p-3">
+              <form id="search"> <i class="fas fa-search"></i>
+                Поиск <input name="query" v-model="searchQuery" />
+              </form>
+            </div>
+
+            <fenderrow-grid :fenders="listT" :columns="gridColumns" :filter-key="searchQuery"></fenderrow-grid>
+
+            <!-- <row-grid :values="listT"> </row-grid> -->
           </div>
         </div>
       </div>
@@ -462,18 +522,77 @@
   </div>
 
   <script>
-    Vue.component('row-grid', {
-      template: "#res-template",
+
+
+    Vue.component("fenderrow-grid", {
+      template: "#grid-template",
       props: {
-        values: Array
+        fenders: Array,//Array
+        columns: Array,
+        names: Array,
+        filterKey: String
+      },
+      data: function () {
+        var sortOrders = {};
+        this.columns.forEach(function (key) {
+          sortOrders[key] = 1;
+        });
+        return {
+          sortKey: "",
+          sortOrders: sortOrders
+        };
+      },
+      computed: {
+        filteredfenders: function () {
+          var sortKey = this.sortKey;
+          var filterKey = this.filterKey && this.filterKey.toLowerCase();
+          var order = this.sortOrders[sortKey] || 1;
+          var fenders = this.fenders;
+          if (filterKey) {
+            fenders = fenders.filter(function (row) {
+              return Object.keys(row).some(function (key) {
+                return (
+                  String(row[key])
+                    .toLowerCase()
+                    .indexOf(filterKey) > -1
+                );
+              });
+            });
+          }
+          if (sortKey) {
+            fenders = fenders.slice().sort(function (a, b) {
+              a = a[sortKey];
+              b = b[sortKey];
+              return (a === b ? 0 : a > b ? 1 : -1) * order;
+            });
+          }
+          return fenders;
+        }
+      },
+      filters: {
+        russianalize: function (str) {
+          if (str == "length") { return "Длина "; }
+          else if (str == "width") { return "Ширина "; }
+          else if (str == "rubber") { return "Тип резины "; }
+          else { return "Энергия "; }
+        }
+      },
+      methods: {
+        sortBy: function (key) {
+          this.sortKey = key;
+          this.sortOrders[key] = this.sortOrders[key] * -1;
+        }
       }
     });
+
 
     // form and it's logic
     let forminput = new Vue({
       el: '#forminput',
       data() {
         return {
+          searchQuery: "",
+          gridColumns: ["rubber", "energy", "width", "length"],
           listT: [1, 2, 3, 4],
           showIfClose: true,
           showIfSide: false,

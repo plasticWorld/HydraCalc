@@ -1,0 +1,47 @@
+.halfStyle { /* base char and also the bottom 1/3 */
+    text-align: center;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    position:relative;
+    display:inline-block;
+    font-size:80px; /* or any font size will work */
+    white-space: pre; /* to preserve the spaces from collapsing */
+    color: #264A73;
+    font-weight: 1000;
+    cursor: pointer;
+}
+
+.halfStyle:after { 
+    display:block;
+    position:absolute;
+    z-index:1;
+    top:0;
+    height: 65%;
+    content: attr(data-content); /* dynamic content for the pseudo element */
+    overflow:hidden;
+    color:  #409FBF; 
+    border-radius:0px 0px 30px 20px;
+    border-color: transparent ;
+    border-width: 0px;
+}
+.halfStyle:before { 
+    display:block;
+    z-index:2;
+    position:absolute;
+    top:0;
+    height: 55%;
+    content: attr(data-content); /* dynamic content for the pseudo element */
+    overflow:hidden;
+    color: paleturquoise; 
+    border-radius: 0px 0px 20px 40px;
+    border-color: transparent;
+    border-width: 0px;
+}
+
+.halfStylee { /* base char and also the bottom 1/3 */
+    text-align: center;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    display:inline-block;
+    font-size:80px; /* or any font size will work */
+    white-space: pre; /* to preserve the spaces from collapsing */
+    color: rgba(178, 34, 34, 0.904);
+}

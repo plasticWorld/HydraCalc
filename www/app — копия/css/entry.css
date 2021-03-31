@@ -1,0 +1,65 @@
+body, html {
+    height: 100%;
+    margin:0;
+
+  }
+  
+  .bgimg {
+    /* Background image */
+    background-image: url('../src/1.jpg');
+    /* Full-screen */
+    height: 100%;
+    /* Center the background image */
+    background-position: center;
+    /* Scale and zoom in the image */
+    background-size: cover;
+    /* Add position: relative to enable absolutely positioned elements inside the image (place text) */
+    position: relative;
+    /* Add a white text color to all elements inside the .bgimg container */
+    color: #264A73;
+    /* Add a font */
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    /* Set the font-size to 25 pixels */
+    font-size: 25px;
+  }
+  .red{
+    color: firebrick;
+  }
+  
+  /* Position text in the top-left corner */
+  .topmiddle {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    text-align: center;    
+    transform: translate(-50%, -50%);
+  }
+  
+
+.fa-water:hover{
+    color: firebrick;
+    cursor: pointer;
+}
+  
+  /* Position text in the middle */
+  .middle {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  
+  /* Style the <hr> element */
+  hr {
+    margin: auto;
+    width: 40%;
+  }
+
+  a:link, a:visited {
+    text-decoration: none;
+    display: block;
+    color: #264A73;
+    transition: 0.3s;
+    
+  }
