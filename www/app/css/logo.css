@@ -1,19 +1,20 @@
-.halfStyle { /* base char and also the bottom 1/3 */
+.halfStyle { 
     text-align: center;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     position:relative;
     display:inline-block;
-    font-size:80px; /* or any font size will work */
+z-index: 1;
+    font-size:70px; /* or any font size will work */
     white-space: pre; /* to preserve the spaces from collapsing */
     color: #264A73;
     font-weight: 1000;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .halfStyle:after { 
     display:block;
     position:absolute;
-    z-index:1;
+    z-index:2;
     top:0;
     height: 65%;
     content: attr(data-content); /* dynamic content for the pseudo element */
@@ -25,7 +26,7 @@
 }
 .halfStyle:before { 
     display:block;
-    z-index:2;
+    z-index: 3;
     position:absolute;
     top:0;
     height: 55%;
@@ -35,13 +36,4 @@
     border-radius: 0px 0px 20px 40px;
     border-color: transparent;
     border-width: 0px;
-}
-
-.halfStylee { /* base char and also the bottom 1/3 */
-    text-align: center;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    display:inline-block;
-    font-size:80px; /* or any font size will work */
-    white-space: pre; /* to preserve the spaces from collapsing */
-    color: rgba(178, 34, 34, 0.904);
 }

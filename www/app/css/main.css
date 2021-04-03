@@ -1,0 +1,162 @@
+::-webkit-scrollbar{  
+  width: 10px;
+}
+::-webkit-scrollbar-thumb{
+  border-radius: 10px;
+  background: linear-gradient(180deg, #00c6fb, #005bea);
+}
+::-webkit-scrollbar-track{
+  border-radius: 10px;
+  background-color: #f9f9fd;
+  -webkit-box-shadow: 5px 5px 5px -5px rgba(34,60,80,0.2) inset;
+}
+
+body{
+  
+  overflow-x: hidden;
+}
+td,
+th {
+  user-select: none;
+}
+
+.centered td {
+  vertical-align: middle;
+}
+
+.centered thead th {
+  vertical-align: middle;
+}
+
+.container {
+  width: fit-content;
+  max-width: 500px;
+}
+
+#picture {
+  max-width: 600px;
+  left: 50%;  
+}
+
+.fa-water{color: #264A73;
+}
+.fa-water:hover{
+  /* color: #409FBF; */
+  color: firebrick;
+  cursor: pointer;
+}
+
+
+ 
+  ul {
+    list-style: none;
+  }
+
+
+ 
+    th {
+      cursor: pointer;
+      color: rgba(75, 75, 75, 0.781);
+      background-color: #dddddd;
+    }
+
+    th.active {
+      color: rgb(255, 255, 255);
+      background-color: rgb(52, 181, 255);
+    }
+
+    th.active .arrow {
+      opacity: 1;
+    }
+
+    .arrow {
+      display: inline-block;
+      vertical-align: middle;
+      width: 0;
+      height: 0;
+      margin-left: 5px;
+      opacity: 0.66;
+    }
+
+    .arrow.asc {
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-bottom: 4px solid #dddddd;
+    }
+
+    .arrow.dsc {
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 4px solid #dddddd;
+    }
+
+    .overlay {
+      /* Height & width depends on how you want to reveal the overlay (see JS below) */   
+      height: 100%;
+      width: 0;
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      left: 0;
+      top: 0;
+      background-color: rgb(0,0,0); /* Black fallback color */
+      background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
+      overflow-x: hidden; /* Disable horizontal scroll */
+      transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+    }
+    
+    ::-webkit-scrollbar{
+      display: none;
+    }
+    
+    hr{
+      width: 40%;
+      border-color: rgb(112, 176, 231);
+      border-width: 2px;
+      border-radius: 50px;
+    }
+    
+    /* Position the content inside the overlay */
+    .overlay-content {
+      position: relative;
+    
+      top: 25%; /* 25% from the top */
+      width: 80%; /* 100% width */
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 700px;
+      text-align: center; /* Centered text/links */
+      margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
+    }
+    
+    /* The navigation links inside the overlay */
+    .overlay a {
+      padding: 8px;
+      text-decoration: none;
+      font-size: 30px;
+      color: #818181;
+      display: block; /* Display block instead of inline */
+      transition: 0.3s; /* Transition effects on hover (color) */
+    }
+    
+    /* When you mouse over the navigation links, change their color */
+    .overlay a:hover, .overlay a:focus {
+      color: #f1f1f1;
+    }
+    
+    /* Position the close button (top right corner) */
+    .overlay .closebtn {
+      position: absolute;
+      top: 20px;
+      right: 45px;
+      font-size: 80px;
+    }
+    
+    /* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
+    @media screen and (max-height: 450px) {
+      .overlay a {font-size: 18px}
+      .overlay .closebtn {
+        font-size: 40px;
+        top: 15px;
+        right: 35px;
+      }
+    }

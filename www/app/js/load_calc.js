@@ -119,23 +119,17 @@ function LinearInterpolation(x, xValues, yValues) {
 }
 
 // храним полученные значения энергии от подхода
-// для более удобного импорта
 export let finalEnergy = {
   Min: 0,
   Max: 0
 };
-
-
+// вычисляет значения кинетической энергии навала
 export function CalcStart() {
   // получаем значения из формы
   let vesselVolume = document.getElementById("vesselVolume").value;
-
   let velocity = CalcVelocity(vesselVolume);
-
   let isSideApproach = document.getElementById("sideApproach").checked;
-
   let coefficientOfAddedMass = AddedMass(isSideApproach);
-
   let coefficientOfThrough = 1;
   let isTowing = document.getElementById("towing").checked;
   let isSolid = document.getElementById("solidStructure").checked;

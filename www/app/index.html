@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ГТС-Расчеты</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="./src/favicon.png" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.1/css/all.css"
+    integrity="sha384-xxzQGERXS00kBmZW/6qxqJPyxW3UR0BPsL4c8ILaIWXva5kFi7TxkIIaMiKtqV1Q" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="./css/entry.css">
+
+</head>
+
+<body>
+  <div id="mynav" class="overlay">
+
+    <!-- Button to close the overlay navigation -->
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+    <!-- Overlay content -->
+    <div class="overlay-content">
+      <a href="./html/fendersfind.html">Расчет нагрузки от навала судна при подходе к
+        сооружению</a>
+      <hr>
+      <a href="#">Расчет нагрузки от навала судна пришвартованного судна на
+        сооружение</a>
+      <hr>
+      <a href="#">Расчет нагрузки от натяжения швартовов</a>
+      <hr>
+      <a href="#">Определение отметки дна перед сооружением</a>
+      <hr>
+      <a href="#">Подбор деталей больверка</a>
+      <hr>
+      <a href="#">Определение массы камня для крепления откоса берегового
+        укрепления</a>
+      <hr>
+      <a href="#">Руководство пользователя</a>
+    </div>
+  </div>
+
+
+  <div class="bgimg">
+    <div class="topmiddle" data-toggle="tooltip" data-placement="top" title="Нажми меня!">
+      <!-- <hr> -->
+      <i onclick="openNav()" class="fas fa-water fa-8x"></i>
+      <!-- <hr> -->
+      <p>Гидротехнические расчеты</p>
+    </div>
+  </div>
+
+  <script>
+    function openNav() {
+      document.getElementById("mynav").style.width = "100%";
+    }
+    function closeNav() {
+      document.getElementById("mynav").style.width = "0";
+    }
+  </script>
+</body>
+
+</html>
