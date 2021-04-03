@@ -96,39 +96,48 @@
 </script>
 
 
-  <title>Расчеты ПМПБ</title>
+  <title>ГТС-Расчеты</title>
 
 </head>
 
 <body>
 
-  <div id="mySidenav" class="sidenav">
-    <span id="closeicon" onclick="closeNav()">
-      <i class="fas fa-times fa-2x"></i>
-    </span>
-    <hr>
-    <a href="#">Расчет нагрузки от навала судна при подходе к сооружению</a>
-    <hr>
-    <a href="#">Расчет нагрузки от навала судна пришвартованного судна на сооружение</a>
-    <hr>
-    <a href="#">Расчет нагрузки от натяжения швартовов</a>
-    <hr>
-    <a href="#">Определение отметки дна перед сооружением</a>
-    <hr>
-    <a href="#">Подбор деталей больверка</a>
-    <hr>
-    <a href="#">Определение массы камня для крепления откоса берегового укрепления</a>
-    <hr>
-    <a href="#">Руководство пользователя</a>
+  <div id="mynav" class="overlay">
+
+    <!-- Button to close the overlay navigation -->
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+    <!-- Overlay content -->
+    <div class="overlay-content">
+      <a href="#">Расчет нагрузки от навала судна при подходе к
+        сооружению</a>
+      <hr>
+      <a href="#">Расчет нагрузки от навала судна пришвартованного судна на
+        сооружение</a>
+      <hr>
+      <a href="#">Расчет нагрузки от натяжения швартовов</a>
+      <hr>
+      <a href="#">Определение отметки дна перед сооружением</a>
+      <hr>
+      <a href="#">Подбор деталей больверка</a>
+      <hr>
+      <a href="#">Определение массы камня для крепления откоса берегового
+        укрепления</a>
+      <hr>
+      <a href="#">Руководство пользователя</a>
+    </div>
   </div>
+
 
   <div id="openicon" class="align-middle text-center">
     <i onclick="openNav()" class="fas fa-water fa-5x"></i>
     <!-- <span id="logo">ПМПБ</span> -->
-    <span class="halfStyle" data-content="П">П</span>
-    <span class="halfStyle" data-content="М">М</span>
-    <span class="halfStylee">П</span>
-    <span class="halfStylee">Б</span>
+    <span class="halfStyle" data-content="H">H</span>
+    <span class="halfStyle" data-content="Y">Y</span>
+    <span class="halfStyle" data-content="D">D</span>
+    <span class="halfStyle" data-content="R">R</span>
+    <span class="halfStyle" data-content="A">A</span>
+    <span class="halfStyle">CALC</span>
   </div>
   <div class="align-middle text-center">
     <h1>Расчет нагрузки от навала судна при подходе к сооружению</h1>
@@ -213,7 +222,7 @@
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="approach" id="sternApproach"
+              <input class="form-check-input" type="radio" checked name="approach" id="sternApproach"
                 v-on:input="approach = 'stern'" v-on:change="onApproachChange">
               <label class="form-check-label" for="sternApproach">
                 Подход судна кормой (носом)
@@ -629,13 +638,13 @@
   <script>
     /* Set the width of the side navigation*/
     function openNav() {
-      document.getElementById("mySidenav").style.width = "400px";
+      document.getElementById("mynav").style.width = "100%";
       document.getElementById("picture").style.visibility = "hidden";
     }
 
     /* Set the width of the side navigation to 0 */
     function closeNav() {
-      document.getElementById("mySidenav").style.width = "0";
+      document.getElementById("mynav").style.width = "0";
       document.getElementById("picture").style.visibility = "visible";
     }
   </script>

@@ -1,9 +1,10 @@
+
 .halfStyle { 
     text-align: center;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    /* font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; */
+    font-family: Impacto, Impact, sans-serif;
     position:relative;
     display:inline-block;
-z-index: 1;
     font-size:70px; /* or any font size will work */
     white-space: pre; /* to preserve the spaces from collapsing */
     color: #264A73;
@@ -37,3 +38,8 @@ z-index: 1;
     border-color: transparent;
     border-width: 0px;
 }
+
+@media screen and (max-width: 500px) {
+    .halfStyle {font-size: 45px}
+    
+  }
