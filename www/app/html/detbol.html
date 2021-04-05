@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <link rel="shortcut icon" type="image/png" href="../src/favicon.png" />
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css"
+    rel="stylesheet">
+  <script
+    src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.1/css/all.css"
+    integrity="sha384-xxzQGERXS00kBmZW/6qxqJPyxW3UR0BPsL4c8ILaIWXva5kFi7TxkIIaMiKtqV1Q" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/logo.css">
+
+  <title>Детали больверка</title>
+</head>
+
+<body>
+  <div id="mynav" class="overlay">
+
+    <!-- Button to close the overlay navigation -->
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+    <!-- Overlay content -->
+    <div class="overlay-content">
+      <a href="./fendersfind.html">Расчет нагрузки от навала судна при подходе к сооружению</a>
+      <hr>
+      <a href="#">Расчет нагрузки от навала судна пришвартованного судна на сооружение</a>
+      <hr>
+      <a href="#">Расчет нагрузки от натяжения швартовов</a>
+      <hr>
+      <a href="#">Определение отметки дна перед сооружением</a>
+      <hr>
+      <a href="#">Подбор деталей больверка</a>
+      <hr>
+      <a href="#">Определение массы камня для крепления откоса берегоукрепления</a>
+      <hr>
+      <a href="#">Руководство пользователя</a>
+    </div>
+  </div>
+
+
+  <div id="openicon" class="align-middle text-center">
+    <i onclick="openNav()" class="fas fa-water fa-5x"></i>
+    <!-- <span id="logo">ПМПБ</span> -->
+    <span class="halfStyle" data-content="H">H</span>
+    <span class="halfStyle" data-content="Y">Y</span>
+    <span class="halfStyle" data-content="D">D</span>
+    <span class="halfStyle" data-content="R">R</span>
+    <span class="halfStyle" data-content="A">A</span>
+    <span class="halfStyle">CALC</span>
+  </div>
+  <div class="align-middle text-center">
+    <h1>Подбор деталей больверка</h1>
+
+    <span class="text-muted container">Расчет производится в соответствии с нормативными документами
+      (РД 31.31.55-93, ГОСТ 19281-2014, ГОСТ 2590-2006, ГОСТ 535-2005, СП 23.13330.2018, СП 16.13330.2017)</span>
+  </div>
+  <div id="bolwerk">
+    <div class="pt-2 sticky-top  text-right col-auto" v-show="!showTable" id="picture">
+      <button id="designScheme" type="button" class="btn btn-outline-success pb-2 " data-toggle="tooltip"
+        title="Расчетная схема" @click="showScheme = !showScheme">
+        <i class="fas fa-pencil-ruler fa-2x"></i>
+      </button>
+      <div class="modal modal-content align-middle text-center" v-show="showScheme">
+        <h5>Расчетная схема</h5>
+        <p><img class="img-fluid" src="../src/scheme.png" alt=" Расчетная схема"></p>
+      </div>
+    </div>
+
+
+    <div class="container">
+      <form action="#" v-show="!showTable">
+        <div>
+          <label class="btn btn-outline-info" for="classone">
+            <input type="radio" id="classone" value="Первый" v-model="pickedclass" name="class" autocomplete="off">
+            I</label>
+          <label class="btn btn-outline-info" for="classtwo">
+            <input type="radio" id="classtwo" value="Второй" v-model="pickedclass" name="class" autocomplete="off">
+            II</label>
+          <label class="btn btn-outline-info" for="classthree">
+            <input type="radio" id="classthree" value="Третий" v-model="pickedclass" name="class" autocomplete="off">
+            III</label>
+          <label class="btn btn-outline-info" for="classfour">
+            <input type="radio" id="classfour" value="Четвертый" v-model="pickedclass" name="class" autocomplete="off">
+            IV</label>
+          <p class="align-middle"> Класс сооружения: {{ pickedclass }}</p>
+        </div>
+        <div class="range">
+          <input type="range" class="custom-range" min="1" max="20" step="1" value="2" id="mooringBollard"
+            v-model="bolladrsNumber" list="steplist">
+          <datalist id="steplist">
+            <option>1</option>
+            <option>20</option>
+          </datalist>
+
+        </div>
+        <p for="mooringBollard">Количество тумб на причале: {{ bolladrsNumber }} шт.</p>
+
+        <div class="form-group pt-2">
+          <label for="flyover"> Условный пролет лицевой стенки больверка, L<sub>б</sub></label>
+          <input type="number" class="form-control" id="flyover" aria-describedby="inputHelp" min="1" max="50"
+            v-model.number="flyoverValue">
+          <small id="inputHelp" class="form-text text-muted">Ввeдите значение в метрах</small>
+        </div>
+
+        <div class="form-group pt-2">
+          <label for="loadsCases">Сочетание нагрузок (выберите одно):</label>
+          <select class="custom-select" size="4" id="loadsCases" name="loadsCases" v-model="selectedLoad">
+            <option v-for="load in loads" v-bind:value="load">{{load.case}}</option>
+          </select>
+          <small class="text-muted">{{selectedLoad.case}} - {{selectedLoad.value}}</small>
+        </div>
+
+        <div class="form-group pt-2">
+          <label for="bollardArray"> Длина тумбового массива, <i>l</i><sub>т</sub></label>
+          <input type="number" class="form-control" id="bollardArray" aria-describedby="inputHelp" min="1" max="15"
+            v-model.number="bollardArrayLength">
+          <small id="inputHelp" class="form-text text-muted">Ввeдите значение в метрах</small>
+        </div>
+
+        <div class="form-group pt-2">
+          <label for="thrustLevel">Отметка уровня крепления тяги к лицевой стенке</label>
+          <input type="number" class="form-control" id="thrustLevel" aria-describedby="inputHelp"
+            v-model.number="thrustFaceLevel" @change="levelValidation($event)">
+          <small id="inputHelp" class="form-text text-muted">Ввeдите значение в метрах</small>
+          <span v-show="!levelcheck" class="text-danger">ВНИМАНИЕ! НЕСООТВЕТСТВИЕ ОТМЕТОК УРОВНЕЙ!</span>
+        </div>
+
+        <div class="form-group pt-2">
+          <label for="territoryLevel">Отметка уровня верха кордона</label>
+          <input type="number" class="form-control" id="teritoryLevel" aria-describedby="inputHelp"
+            v-model.number="territoryLevel" @change="levelValidation($event)">
+          <small id="inputHelp" class="form-text text-muted">Ввeдите значение в метрах</small>
+          <span v-show="!levelcheck" class="text-danger">ВНИМАНИЕ! НЕСООТВЕТСТВИЕ ОТМЕТОК УРОВНЕЙ!</span>
+        </div>
+
+        <div class="form-group pt-2">
+          <label for="Qtot">Значение поперечной силы от суммарного воздействия ветра, течения и волн,
+            Q<sub>tot</sub></label>
+          <input type="number" class="form-control" id="Qtot" aria-describedby="inputHelp" v-model.number="Qtot">
+          <small id="inputHelp" class="form-text text-muted">Ввeдите значение в кН</small>
+        </div>
+
+        <div class="form-group pt-2">
+          <span>Материал тяг:</span>
+          <div>
+            <div class="custom-control custom-radio custom-control-inline" v-show="!showCustom">
+              <input type="radio" id="steel1" name="customRadioInline1" checked class="custom-control-input"
+                v-model="yieldPointValue" value="225">
+              <label class="custom-control-label" for="steel1">Ст3сп (225)</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline" v-show="!showCustom">
+              <input type="radio" id="steel2" name="customRadioInline1" class="custom-control-input"
+                v-model="yieldPointValue" value="265">
+              <label class="custom-control-label" for="steel2">09Г2С (265)</label>
+            </div>
+          </div>
+
+          <div class="custom-control custom-checkbox" v-on:change="showCustom=!showCustom">
+            <input type="checkbox" class="custom-control-input" id="steel3">
+            <label class="custom-control-label" for="steel3">Ввести свое значение</label>
+          </div>
+          <div v-show="showCustom">
+            <label for="yieldPoint">Предел текучести материала (нормативное сопротивление), &sigma;<sub>т</sub></label>
+            <input type="number" class="form-control" id="yieldPoint" aria-describedby="inputHelp"
+              v-model.lazy="yieldPointValue">
+            <small id="inputHelp" class="form-text text-muted">Ввeдите значение в кН/мм<sup>2</sup></small>
+          </div>
+        </div>
+
+        <div class="form-group pt-2">
+          <div class="pb-2">
+            <input id="shielded" type="checkbox" data-toggle="switchbutton" data-onlabel="Да" data-offlabel="Нет"
+              data-onstyle="info" data-offstyle="light" v-model="ifShielded">
+            Экранированный больверк
+          </div>
+
+          <div class="form-group pt-2">
+            <div class="pt-2">
+              <label for="anchorAngleFace">Угол наклона тяги закрепленной за лицевую стенку к горизонту,
+                &alpha;<sub>л</sub></label>
+              <input type="number" class="form-control" id="anchorAngleFace" aria-describedby="inputHelp"
+                v-model.number="anchorAngle.face" min=0 max=90>
+              <small id="inputHelp" class="form-text text-muted">Ввeдите значение в градусах</small>
+            </div>
+            <div class="pt-3" v-show="ifShielded">
+              <label for="anchorAngleBack">Угол наклона тяги закрепленной за экранирующую стенку к горизонту,
+                &alpha;<sub>э</sub></label>
+              <input type="number" class="form-control" id="anchorAngleBack" aria-describedby="inputHelp"
+                v-model.number="anchorAngle.back" min=0 max=90>
+              <small id="inputHelp" class="form-text text-muted">Ввeдите значение в градусах</small>
+            </div>
+            <div class="pt-3">
+              <label for="anchorStepFace">Шаг анкерных тяг закрепленных за лицевую стенку, S<sub>л</sub></label>
+              <input type="number" class="form-control" id="anchorStepFace" aria-describedby="inputHelp"
+                v-model.number="anchorStep.face" min=0 max=50>
+              <small id="inputHelp" class="form-text text-muted">Ввeдите значение в метрах</small>
+            </div>
+            <div class="pt-3" v-show="ifShielded">
+              <label for="anchorStepBack">Шаг анкерных тяг закрепленных за экранирующую стенку, S<sub>э</sub></label>
+              <input type="number" class="form-control" id="anchorStepBack" aria-describedby="inputHelp"
+                v-model.number="anchorStep.back" min=0 max=50>
+              <small id="inputHelp" class="form-text text-muted">Ввeдите значение в метрах</small>
+            </div>
+            <div class="pt-3">
+              <label for="anchorStressFace">Расчетная анкерная реакция лицевой стенки больверка, R<sub>л</sub></label>
+              <input type="number" class="form-control" id="anchorStressFace" aria-describedby="inputHelp"
+                v-model.number="anchorStress.face" min=0 max=50>
+              <small id="inputHelp" class="form-text text-muted">Ввeдите значение в кН/м</small>
+            </div>
+            <div class="pt-3" v-show="ifShielded">
+              <label for="anchorStressBack">Расчетная анкерная реакция лицевой стенки больверка, R<sub>э</sub></label>
+              <input type="number" class="form-control" id="anchorStressBack" aria-describedby="inputHelp"
+                v-model.number="anchorStress.back" min=0 max=50>
+              <small id="inputHelp" class="form-text text-muted">Ввeдите значение в кН/м</small>
+            </div>
+          </div>
+          <div class="pb-2" v-show="ifShielded">
+            <input id="chainAnchor" type="checkbox" data-toggle="switchbutton" data-onlabel="Да" data-offlabel="Нет"
+              data-onstyle="info" data-offstyle="light" v-model="ifChain">
+            Анкеровка лицевой стенки за экранирующую
+          </div>
+        </div>
+
+        <div class="form-group pt-2">
+          <span>Материал распределительного пояса:</span>
+          <div>
+            <div class="custom-control custom-radio custom-control-inline" v-show="!showCustomBelt">
+              <input type="radio" id="steelBelt1" name="customRadioInline1" checked class="custom-control-input"
+                v-model="yieldPointBelt" value="225">
+              <label class="custom-control-label" for="steelBelt1">Ст3сп (225)</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline" v-show="!showCustomBelt">
+              <input type="radio" id="steelBelt2" name="customRadioInline1" class="custom-control-input"
+                v-model="yieldPointBelt" value="265">
+              <label class="custom-control-label" for="steelBelt2">09Г2С (265)</label>
+            </div>
+          </div>
+
+          <div class="custom-control custom-checkbox" v-on:change="showCustomBelt=!showCustomBelt">
+            <input type="checkbox" class="custom-control-input" id="steelBelt3">
+            <label class="custom-control-label" for="steelBelt3">Ввести свое значение</label>
+          </div>
+          <div v-show="showCustomBelt">
+            <label for="yieldPointBelt">Предел текучести материала (нормативное сопротивление),
+              &sigma;<sub>т</sub></label>
+            <input type="number" class="form-control" id="yieldPointBelt" aria-describedby="inputHelp"
+              v-model.lazy="yieldPointBelt">
+            <small id="inputHelp" class="form-text text-muted">Ввeдите значение в кН/мм<sup>2</sup></small>
+          </div>
+        </div>
+
+        <br>
+
+        <!-- @click.left="showTable = true" -->
+        <button type="button" id="calc" class="btn btn-outline-success pb-2" @click="detbolStart()" v-show="levelcheck">
+          <i class="fa fa-calculator" aria-hidden="true"></i> Подобрать
+        </button>
+      </form>
+
+      <br>
+
+      <div id="resAll">
+        <!-- v-show="showTable" -->
+        <div>
+          <a type="button" class="noprint btn btn-outline-secondary" href='./detbol.html'>
+            <i class="fas fa-angle-double-left"></i> Назад</a>
+
+          <a type="button" class="noprint btn btn-outline-warning" href='javascript:window.print(); void 0;'>
+            <i class="fas fa-print"></i> Распечатать</a>
+        </div>
+        <br>
+
+        <table class="centered table table-bordered table-sm bt-2">
+          <thead class="thead-light">
+            <tr class="text-center">
+              <th>Параметр</th>
+              <th>Обознач.</th>
+              <th>Ед.изм.</th>
+              <th>Значение</th>
+            </tr>
+          </thead>
+          <tbody class="text-center">
+            <tr>
+              <td class="text-left">Расчетное сопротивление материала тяг растяжению</td>
+              <td>R<sub>y</sub></td>
+              <td>кПа</td>
+              <td> {{ resistance }} </td>
+            </tr>
+            <tr>
+              <td class="text-left">Растягивающее усилие в лицевой анкерной тяге</td>
+              <td>R<sub>атл</sub></td>
+              <td>кН</td>
+              <td> {{ stress.face }} </td>
+            </tr>
+
+            <tr>
+              <td class="text-left">Минимальный диаметр лицевой анкерной тяги</td>
+              <td>&#8960;<sub>л</sub></td>
+              <td>мм</td>
+              <td> {{diametr.face}} </td>
+            </tr>
+
+            <tr>
+              <td class="text-left">Растягивающее усилие в лицевой анкерной тяге с учетом тумбового массива</td>
+              <td>R<sub>атлт</sub></td>
+              <td>кН</td>
+              <td> {{ stress.faceBollard }} </td>
+            </tr>
+
+            <tr>
+              <td class="text-left">Минимальный диаметр лицевой анкерной тяги с учетом тумбового массива</td>
+              <td>&#8960;<sub>лт</sub></td>
+              <td>мм</td>
+              <td> {{diametr.faceBollard}} </td>
+            </tr>
+
+            <tr v-show="ifShielded">
+              <td class="text-left">Растягивающее усилие в тыловой анкерной тяге</td>
+              <td>R<sub>атэ</sub></td>
+              <td>кН</td>
+              <td> {{ stress.back }} </td>
+            </tr>
+
+            <tr v-show="ifShielded">
+              <td class="text-left">Минимальный диаметр тыловой анкерной тяги</td>
+              <td>&#8960;<sub>э</sub></td>
+              <td>мм</td>
+              <td> {{diametr.back}} </td>
+            </tr>
+                        <tr>
+              <td class="text-left">Минимальный номер швеллера в распределительном поясе с учетом тумбового массива</td>
+              <td>N<sub>т</sub></td>
+              <td>-</td>
+              <td> {{sweller}} </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let bolwerk = new Vue({
+      el: '#bolwerk',
+      data: function () {
+        return {
+          pickedclass: 'Третий',
+
+          bolladrsNumber: 1,
+          flyoverValue: 1,
+          bollardArrayLength: 1,
+          territoryLevel: +2.345,
+          thrustFaceLevel: -1.255,
+          Qtot: 100,
+          yieldPointValue: 225,
+          showCustom: false,
+          yieldPointBelt: 225,
+          showCustomBelt: false,
+          loads: [
+            { case: 'Основное сочетание нагрузок', value: 1.0 },
+            { case: 'Особая нагрузка, в том числе сейсмическая (ПЗ)', value: 0.95 },
+            { case: 'Сейсмическая нагрузка (МРЗ)', value: 0.85 },
+            { case: 'Сочетание нагрузок в период строительства и ремонта', value: 0.95 },
+          ],
+          selectedLoad: { case: 'Основное сочетание нагрузок', value: 1.0 },
+          levelcheck: true,
+          ifShielded: false,
+          sweller: 0,
+          ifChain: false,
+          anchorAngle: {
+            face: 0,
+            back: 0,
+          },
+          anchorStep: {
+            face: 1,
+            back: 1,
+          },
+          anchorStress: {
+            face: 1,
+            back: 1,
+          },
+          showScheme: false,
+          showTable: false,
+          resistance: 1,
+          stress: {
+            face: 0,
+            faceBollard: 0,
+            back: 0,
+          },
+          diametr: {
+            face: 0,
+            faceBollard: 0,
+            back: 0,
+          },
+        }
+      },
+      methods: {
+        levelValidation() {
+          if (this.thrustFaceLevel + 0.5 >= this.territoryLevel) {
+            this.levelcheck = false;
+          } else {
+            this.levelcheck = true;
+          }
+          return this.levelcheck;
+        },
+        detbolStart: async function (event) {
+          let db = await import('../js/detbol.js');
+          let area = 0.000001; // millimetrs!!!
+          let gamman = 1.1;
+          if (document.getElementById("classone").checked) { gamman = 1.25; }
+          else if (document.getElementById("classtwo").checked) { gamman = 1.2; }
+          else if (document.getElementById("classthree").checked) { gamman = 1.15; }
+          this.resistance = db.Resistance(this.yieldPointValue); // checked
+          let right = (1 / gamman) * this.resistance;
+          let height = db.HeightDifference(this.territoryLevel, this.thrustFaceLevel); // checked
+          let loadMooring = db.MooringLoad(this.Qtot, this.bolladrsNumber); // checked
+          let stressMooring = db.mooringStress(this.flyoverValue, this.bollardArrayLength, height, loadMooring); // checked
+          if (this.ifShielded) {
+            this.stress.back = db.StressInAnchor(this.anchorAngle.back, this.anchorStress.back, this.anchorStep.back, false);
+            this.diametr.back = db.findAreaAndDiam(area, this.selectedLoad.value, this.stress.back, right);
+          }
+          this.stress.face = db.StressInAnchor(this.anchorAngle.face, this.anchorStress.face, this.anchorStep.face, this.ifChain);
+          this.diametr.face = db.findAreaAndDiam(area, this.selectedLoad.value, this.stress.face, right);
+
+          let stressWithBollard = stressMooring + this.anchorStress.face;
+          this.stress.faceBollard = db.StressInAnchor(this.anchorAngle.face, stressWithBollard, this.anchorStep.face, this.ifChain);
+          this.diametr.faceBollard = db.findAreaAndDiam(area, this.selectedLoad.value, this.stress.faceBollard, right);
+
+          //let beltMoment = db.MAnchor(stressWithBollard, this.anchorStep.face);
+          let beltMomentBollard = db.MAnchor(stressWithBollard, this.anchorStep.face);
+          let resistanceBelt = db.Resistance(this.yieldPointBelt);
+          let leftBelt = this.selectedLoad.value * beltMomentBollard;
+          this.sweller = db.findSweller(gamman, resistanceBelt, leftBelt);
+        },
+      },
+
+    });
+  </script>
+
+  <script>
+    /* Set the width of the side navigation*/
+    function openNav() {
+      document.getElementById("mynav").style.width = "100%";
+      document.getElementById("picture").style.visibility = "hidden";
+    }
+
+    /* Set the width of the side navigation to 0 */
+    function closeNav() {
+      document.getElementById("mynav").style.width = "0";
+      document.getElementById("picture").style.visibility = "visible";
+    }
+  </script>
+
+  <!-- <script type="module" src="../js/detbol.js"></script> -->
+</body>
+
+</html>
