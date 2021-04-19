@@ -90,14 +90,13 @@ export function SwellerDistance(angle, diamAnchor, sweller, shag, usilie, gammac
   let mI = gammac * gamman * liningMoment; // кН*м
 
   let liningMomentResist = mI / resistanceBelt; // м3
-  
-  let liningDealta = Math.ceil(Math.sqrt((6 * liningMomentResist) / (liningWidth - (2 + norm[el].shpilka)))); //millimetrs
+
+  let liningDealta = Math.ceil(1000 * Math.sqrt((6 * liningMomentResist) / (liningWidth - (2 + norm[el].shpilka)))); //millimetrs
 
   document.getElementById("anchorShpilka").innerHTML = norm[el].shpilka;
   document.getElementById("linlength").innerHTML = liningLength;
   document.getElementById("linwidth").innerHTML = liningWidth;
   document.getElementById("lindelta").innerHTML = liningDealta;
-
 }
 
 

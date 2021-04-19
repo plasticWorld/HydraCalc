@@ -2,6 +2,26 @@
 <html lang="en">
 
 <head>
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+    (function (m, e, t, r, i, k, a) {
+      m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+      m[i].l = 1 * new Date(); k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+    })
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(75973834, "init", {
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true
+    });
+  </script>
+  <noscript>
+    <div><img src="https://mc.yandex.ru/watch/75973834" style="position:absolute; left:-9999px;" alt="" /></div>
+  </noscript>
+  <!-- /Yandex.Metrika counter -->
+
   <link rel="shortcut icon" href="#">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -107,19 +127,26 @@
     <!-- Button to close the overlay navigation -->
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-    <!-- Overlay content -->
-    <div class="overlay-content">
-      <a href="#">Расчет нагрузки от навала судна при подходе к сооружению</a>
-      <hr>
-      <a href="#">Расчет нагрузки от навала судна пришвартованного судна на сооружение</a>
-      <hr>
-      <a href="#">Расчет нагрузки от натяжения швартовов</a>
-      <hr>
-      <a href="#">Определение отметки дна перед сооружением</a>
-      <hr>
-      <a href="./detbol.html">Подбор деталей больверка</a>
-      <hr>
-      <a href="#">Определение массы камня для крепления откоса берегоукрепления</a>
+    <div id="menu" class="overlay-content">
+      <a @click="showDrop = !showDrop"> Расчеты
+        <i class="fa fa-caret-down"></i>
+      </a>
+      <div v-show="showDrop">
+        <a href="./html/fendersfind.html">Расчет нагрузки от навала судна при подходе к
+          сооружению</a>
+        <hr>
+        <a href="#">Расчет нагрузки от навала судна пришвартованного судна на
+          сооружение</a>
+        <hr>
+        <a href="#">Расчет нагрузки от натяжения швартовов</a>
+        <hr>
+        <a href="#">Определение отметки дна перед сооружением</a>
+        <hr>
+        <a href="./html/detbol.html">Подбор деталей больверка</a>
+        <hr>
+        <a href="#">Определение массы камня для крепления откоса берегового
+          укрепления</a>
+      </div>
       <hr>
       <a href="#">Руководство пользователя</a>
     </div>
@@ -160,7 +187,7 @@
         <div class="form-group pt-4">
           <label for="vesselVolume">Водоизмещение в грузу расчетного судна, W</label>
           <input type="number" class="form-control" id="vesselVolume" aria-describedby="emailHelp" min="1" max="5000000"
-            placeholder="0">
+            placeholder="0" v-model="volume">
           <small id="inputHelp" class="form-text text-muted">Вводите значение в тоннах</small>
         </div>
 
@@ -174,7 +201,7 @@
         <div class="form-group" v-show="showIfGateEntrance">
           <label for="vesselVolume">Скорость подхода судна, v<sub>b</sub></label>
           <input type="number" class="form-control" id="vesselVelocity" aria-describedby="emailHelp" min="0.01" max="2"
-            step="0.01" placeholder="0">
+            step="0.01" placeholder="0" v-model="velocity">
           <small id="inputHelp" class="form-text text-muted">Вводите значение в метрах в секунду</small>
         </div>
 
@@ -220,7 +247,7 @@
             </div>
             <div class="form-check">
               <input class="form-check-input" type="radio" checked name="approach" id="sternApproach"
-                v-on:input="approach = 'stern'" v-on:change="onApproachChange" > 
+                v-on:input="approach = 'stern'" v-on:change="onApproachChange">
               <label class="form-check-label" for="sternApproach">
                 Подход судна кормой (носом)
               </label>
@@ -229,7 +256,8 @@
 
           <div class="form-group" v-if="showIfSide">
             <label for="waterDepth">Глубина воды</label>
-            <input type="number" class="form-control" id="waterDepth" min="0.1" max="100" step="0.05" placeholder="0">
+            <input type="number" class="form-control" id="waterDepth" min="0.1" max="100" step="0.05" placeholder="0"
+              v-model="depth">
             <small id="inputHelp" class="form-text text-muted">Вводите значение в метрах</small>
           </div>
         </div>
@@ -243,7 +271,8 @@
 
         <div class="form-group" v-show="showA = (showIfGateEntrance ||  !showMooringAngle) ? true : false">
           <label for="mooringAngle">Угол подхода к причалу &alpha;</label>
-          <input type="number" class="form-control" id="mooringAngle" min="1" max="90" step="1" placeholder="0">
+          <input type="number" class="form-control" id="mooringAngle" min="1" max="90" step="1" placeholder="0"
+            v-model="angle">
           <small id="inputHelp" class="form-text text-muted">Вводите значение в градусах</small>
         </div>
 
@@ -300,31 +329,32 @@
               <input class="form-check-input" class="custom-control-input" type="radio" name="mooring" id="halfMooring"
                 value="half" v-model="showMult">
               <label class="form-check-label" for="halfMooring">
-                Швартовка средней точке
+                Швартовка в средней точке
               </label>
             </div>
           </div>
           <div v-if="!showIfAproximate">
             <div>
               <div class="form-group">
-                <label for="velocityAngle">Угол между направлением двействия скорости V и линией R, &phi;</label>
+                <label for="velocityAngle">Угол между направлением действия скорости V и линией R, &phi;</label>
                 <input type="number" class="form-control" id="velocityAngle"
-                  v-on:input="velocityAngle=$event.target.value" min="1" max="90" step="1" placeholder="0">
+                  v-on:input="velocityAngle=$event.target.value" min="1" max="90" step="1" placeholder="0"
+                  v-model="velAngle">
                 <small id="inputHelp" class="form-text text-muted">Вводите значение в градусах</small>
               </div>
 
-              <div v-show="velocityAngle >= 10 ? true : false">
+              <div v-show="velAngle >= 10 ? true : false">
                 <div class="form-group">
                   <label for="vesselLength">Длина судна</label>
                   <input type="number" class="form-control" id="vesselLength" min="1" max="300" step="0.05"
-                    placeholder="0">
+                    placeholder="0" v-model="length">
                   <small id="inputHelp" class="form-text text-muted">Вводите значение в метрах</small>
                 </div>
 
                 <div class="form-group">
                   <label for="vesselWidth">Ширина судна</label>
                   <input type="number" class="form-control" id="vesselWidth" min="1" max="100" step="0.05"
-                    placeholder="0">
+                    placeholder="0" v-model="width">
                   <small id="inputHelp" class="form-text text-muted">Вводите значение в метрах</small>
                 </div>
 
@@ -332,14 +362,14 @@
                   <label for="vesselWidth">Расстояние по продольной оси судна от его центра тяжести до точки
                     максимальной кривизны борта в плане, у</label>
                   <input type="number" class="form-control" id="centerOfMassDistance" min="1" max="500" step="0.5"
-                    placeholder="0">
+                    placeholder="0" v-model="bort">
                   <small id="inputHelp" class="form-text text-muted">Вводите значение в метрах</small>
                 </div>
 
                 <div class="form-group">
                   <label for="vesselWidth">Плотность воды</label>
                   <input type="number" class="form-control" id="waterDensity" min="0.8" max="2" step="0.005"
-                    placeholder="0">
+                    placeholder="0" v-model="density">
                   <small id="inputHelp" class="form-text text-muted">Вводите значение в тоннах на метр в кубе
                     (стандартное значение 1,025 т/м<sup>3</sup>)</small>
                 </div>
@@ -347,11 +377,11 @@
             </div>
           </div>
 
-          <div v-if="showDraught = (showIfSide || (!showIfAproximate && velocityAngle >= 10)) ? true : false">
+          <div v-if="showDraught = (showIfSide || (!showIfAproximate && velAngle >= 10)) ? true : false">
             <div class="form-group pt-1">
               <label for="vesselDraught">Осадка судна</label>
-              <input type="number" class="form-control" id="vesselDraught" min="0.1" max="50" step="0.1"
-                placeholder="0">
+              <input type="number" class="form-control" id="vesselDraught" min="0.1" max="50" step="0.1" placeholder="0"
+                v-model="draught">
               <small id="inputHelp" class="form-text text-muted">Вводите значение в метрах</small>
             </div>
           </div>
@@ -514,7 +544,6 @@
 
             <fenderrow-grid :fenders="listT" :columns="gridColumns" :filter-key="searchQuery"></fenderrow-grid>
 
-            <!-- <row-grid :values="listT"> </row-grid> -->
           </div>
         </div>
       </div>
@@ -522,7 +551,14 @@
   </div>
 
   <script>
-
+    let menu = new Vue({
+      el: '#menu',
+      data: function () {
+        return {
+          showDrop: false,
+        }
+      },
+    });
 
     Vue.component("fenderrow-grid", {
       template: "#grid-template",
@@ -611,6 +647,16 @@
           showMult: false,
           showScheme: false,
           showTable: false,
+          volume: 20000,
+          velocity: 1.5,
+          angle: 20,
+          depth: 10,
+          width: 8,
+          length: 67,
+          velAngle: 13,
+          bort: 25,
+          draught: 7,
+          density: 1.025,
           showList: false
         }
       },

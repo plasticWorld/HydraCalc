@@ -2,12 +2,31 @@
 <html lang="en">
 
 <head>
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+    (function (m, e, t, r, i, k, a) {
+      m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+      m[i].l = 1 * new Date(); k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+    })
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(75973834, "init", {
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true
+    });
+  </script>
+  <noscript>
+    <div><img src="https://mc.yandex.ru/watch/75973834" style="position:absolute; left:-9999px;" alt="" /></div>
+  </noscript>
+  <!-- /Yandex.Metrika counter -->
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ГТС-Расчеты</title>
 
-
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <link rel="shortcut icon" type="image/png" href="./src/favicon.png" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.1/css/all.css"
     integrity="sha384-xxzQGERXS00kBmZW/6qxqJPyxW3UR0BPsL4c8ILaIWXva5kFi7TxkIIaMiKtqV1Q" crossorigin="anonymous">
@@ -23,22 +42,26 @@
     <!-- Button to close the overlay navigation -->
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-    <!-- Overlay content -->
-    <div class="overlay-content">
-      <a href="./html/fendersfind.html">Расчет нагрузки от навала судна при подходе к
-        сооружению</a>
-      <hr>
-      <a href="#">Расчет нагрузки от навала судна пришвартованного судна на
-        сооружение</a>
-      <hr>
-      <a href="#">Расчет нагрузки от натяжения швартовов</a>
-      <hr>
-      <a href="#">Определение отметки дна перед сооружением</a>
-      <hr>
-      <a href="./html/detbol.html">Подбор деталей больверка</a>
-      <hr>
-      <a href="#">Определение массы камня для крепления откоса берегового
-        укрепления</a>
+    <div id="menu" class="overlay-content">
+      <a @click="showDrop = !showDrop"> Расчеты
+        <i class="fa fa-caret-down"></i>
+      </a>
+      <div v-show="showDrop">
+        <a href="./html/fendersfind.html">Расчет нагрузки от навала судна при подходе к
+          сооружению</a>
+        <hr>
+        <a href="#">Расчет нагрузки от навала судна пришвартованного судна на
+          сооружение</a>
+        <hr>
+        <a href="#">Расчет нагрузки от натяжения швартовов</a>
+        <hr>
+        <a href="#">Определение отметки дна перед сооружением</a>
+        <hr>
+        <a href="./html/detbol.html">Подбор деталей больверка</a>
+        <hr>
+        <a href="#">Определение массы камня для крепления откоса берегового
+          укрепления</a>
+      </div>
       <hr>
       <a href="#">Руководство пользователя</a>
     </div>
@@ -54,7 +77,16 @@
     </div>
   </div>
 
-  <script>
+  <script type="text/javascript">
+    let menu = new Vue({
+      el: '#menu',
+      data: function () {
+        return {
+          showDrop: false,
+        }
+      },
+    });
+
     function openNav() {
       document.getElementById("mynav").style.width = "100%";
     }

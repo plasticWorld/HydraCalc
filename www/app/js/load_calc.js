@@ -190,7 +190,7 @@ export function CalcStart() {
   document.getElementById("th").innerHTML = coefficientOfThrough;
   document.getElementById("cs").innerHTML = coefficientOfHardness;
   document.getElementById("sf").innerHTML = safety.toFixed(2);
-  if (coefficientOfEccentricity.length > 1) {
+  if (coefficientOfEccentricity.length != 1) {
     document.getElementById("ecc-min").innerHTML = coefficientOfEccentricity[0];
     document.getElementById("ecc-max").innerHTML = coefficientOfEccentricity[1];
     document.getElementById("gb-min").innerHTML = globalCoefficient[0];

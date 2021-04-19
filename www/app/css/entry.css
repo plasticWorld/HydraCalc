@@ -124,9 +124,10 @@ hr{
   }
 }
 
-i{
+div >i{
  border: 5px solid firebrick; 
 }
-i:hover{
+div >i:hover{
   border-color: blue;
 }
+

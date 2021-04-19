@@ -2,6 +2,25 @@
 <html lang="en">
 
 <head>
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+    (function (m, e, t, r, i, k, a) {
+      m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+      m[i].l = 1 * new Date(); k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+    })
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(75973834, "init", {
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true
+    });
+  </script>
+  <noscript>
+    <div><img src="https://mc.yandex.ru/watch/75973834" style="position:absolute; left:-9999px;" alt="" /></div>
+  </noscript>
+  <!-- /Yandex.Metrika counter -->
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,19 +53,26 @@
     <!-- Button to close the overlay navigation -->
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-    <!-- Overlay content -->
-    <div class="overlay-content">
-      <a href="./fendersfind.html">Расчет нагрузки от навала судна при подходе к сооружению</a>
-      <hr>
-      <a href="#">Расчет нагрузки от навала судна пришвартованного судна на сооружение</a>
-      <hr>
-      <a href="#">Расчет нагрузки от натяжения швартовов</a>
-      <hr>
-      <a href="#">Определение отметки дна перед сооружением</a>
-      <hr>
-      <a href="#">Подбор деталей больверка</a>
-      <hr>
-      <a href="#">Определение массы камня для крепления откоса берегоукрепления</a>
+    <div id="menu" class="overlay-content">
+      <a @click="showDrop = !showDrop"> Расчеты
+        <i class="fa fa-caret-down"></i>
+      </a>
+      <div v-show="showDrop">
+        <a href="./html/fendersfind.html">Расчет нагрузки от навала судна при подходе к
+          сооружению</a>
+        <hr>
+        <a href="#">Расчет нагрузки от навала судна пришвартованного судна на
+          сооружение</a>
+        <hr>
+        <a href="#">Расчет нагрузки от натяжения швартовов</a>
+        <hr>
+        <a href="#">Определение отметки дна перед сооружением</a>
+        <hr>
+        <a href="./html/detbol.html">Подбор деталей больверка</a>
+        <hr>
+        <a href="#">Определение массы камня для крепления откоса берегового
+          укрепления</a>
+      </div>
       <hr>
       <a href="#">Руководство пользователя</a>
     </div>
@@ -178,7 +204,7 @@
             <label for="yieldPoint">Предел текучести материала (нормативное сопротивление), &sigma;<sub>т</sub></label>
             <input type="number" class="form-control" id="yieldPoint" aria-describedby="inputHelp"
               v-model.lazy="yieldPointValue">
-            <small id="inputHelp" class="form-text text-muted">Ввeдите значение в кН/мм<sup>2</sup></small>
+            <small id="inputHelp" class="form-text text-muted">Ввeдите значение в Н/мм<sup>2</sup> (МПа)</small>
           </div>
         </div>
 
@@ -260,13 +286,12 @@
               &sigma;<sub>т</sub></label>
             <input type="number" class="form-control" id="yieldPointBelt" aria-describedby="inputHelp"
               v-model.lazy="yieldPointBelt">
-            <small id="inputHelp" class="form-text text-muted">Ввeдите значение в кН/мм<sup>2</sup></small>
+            <small id="inputHelp" class="form-text text-muted">Ввeдите значение в Н/мм<sup>2</sup> (МПа)</small>
           </div>
         </div>
 
         <br>
 
-        <!--  -->
         <button type="button" id="calc" class="btn btn-outline-success pb-2" @click="detbolStart()" v-show="levelcheck"
           @click.left="showTable = true">
           <i class="fa fa-calculator" aria-hidden="true"></i> Подобрать
@@ -299,8 +324,8 @@
             <tr>
               <td class="text-left">Расчетное сопротивление материала тяг растяжению</td>
               <td>R<sub>y</sub></td>
-              <td>кПа</td>
-              <td> {{ resistance/1000 }} </td>
+              <td>МПа</td>
+              <td> {{ resistance }} </td>
             </tr>
             <!-- <tr>
               <td class="text-left">Растягивающее усилие в лицевой анкерной тяге</td>
@@ -380,6 +405,15 @@
   </div>
 
   <script>
+    let menu = new Vue({
+      el: '#menu',
+      data: function () {
+        return {
+          showDrop: false,
+        }
+      },
+    });
+    
     let bolwerk = new Vue({
       el: '#bolwerk',
       data: function () {
@@ -450,8 +484,8 @@
           if (document.getElementById("classone").checked) { gamman = 1.25; }
           else if (document.getElementById("classtwo").checked) { gamman = 1.2; }
           else if (document.getElementById("classthree").checked) { gamman = 1.15; }
-          this.resistance = db.Resistance(this.yieldPointValue); // checked
-          let right = (1 / gamman) * this.resistance;
+          this.resistance = (db.Resistance(this.yieldPointValue) / 1000).toFixed(2); // checked
+          let right = (1 / gamman) * this.resistance * 1000;
           let height = db.HeightDifference(this.territoryLevel, this.thrustFaceLevel); // checked
           let loadMooring = db.MooringLoad(this.Qtot, this.bolladrsNumber); // checked
           let stressMooring = db.mooringStress(this.flyoverValue, this.bollardArrayLength, height, loadMooring); // checked
@@ -463,7 +497,7 @@
           //this.diametr.face = db.findAreaAndDiam(area, this.selectedLoad.value, this.stress.face, right);
 
           let stressWithBollard = stressMooring + this.anchorStress.face;
-          this.stress.faceBollard = db.StressInAnchor(this.anchorAngle.face, stressWithBollard, this.anchorStep.face, this.ifChain);
+          this.stress.faceBollard = (db.StressInAnchor(this.anchorAngle.face, stressWithBollard, this.anchorStep.face, this.ifChain)).toFixed(2);
           this.diametr.faceBollard = db.findAreaAndDiam(area, this.selectedLoad.value, this.stress.faceBollard, right);
 
 
